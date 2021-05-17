@@ -15,12 +15,6 @@
                 <h3 > APPs NAME </h3>
             </div>
 
-            <div class="navMenu">
-                <p> {{newFileText}} </p> <!-- FILE WRITING PANEL -->
-                <p> {{uploadFileText}} </p> <!-- UPLOAD DROPBOX -->
-                <p> {{myFilesText}} </p> <!-- SEE AND OPEN FILES -->
-            </div>
-
             <div class="options">
                 <span>
                     {{helloText}} <h4> {{username}} </h4> <!-- LOGIN when logged out -->
@@ -30,21 +24,29 @@
             </div>
         </div>
         <div class="background" id="panels">
-            <h1> {{titleText}} </h1> <!-- OPTIONAL TEXTBAR -->
-            <div v-if="page == newFile || page == myFilesChoosen" class="panel-nav">
-                <a class="deleteBtn" href="#" > {{deleteText}} </a> <!-- //TODO: Add function for Delete button  -->
-                <a class="saveBtn" href="#" v-if="isEdited"> {{saveText}} </a> <!-- //TODO: Add function for Save/Edit button  -->
-                <a class="editBtn" href="#" v-else> {{editText}} </a> 
-            </div>
-            <div v-if-else="page == uploadFile"> 
-                <!-- //TODO: Add buttons for dropzone if any-->
-            </div>
-            <div class="panel" id="#panel">
-                <!-- Content -->
+        <div v-if="page == authPage">
+            <!-- AUTH -->
+        </div>
+
+        <div id="editNote" v-if="page == 'editPage'">
+            <!-- Title -->
+            <h1><editable :content="title" @update="title = $event" style="outline: 0px solid transparent;"></editable></h1>
+
+            <div class="panel" style="height:auto;">
+                <!-- Description -->
                 <div id="textArea">
-                    <editable :content="text" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;"></editable>
+                    <editable :content="description" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;">{{noteText}}</editable>
                 </div>
             </div>
+            
+            <div class="panel">
+                <!-- Content -->
+                <div id="textArea">
+                    <editable :content="text" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;">{{noteText}}</editable>
+                </div>
+            </div>
+        </div>
+            
         </div>
         <script src="vue.js"></script>
         
