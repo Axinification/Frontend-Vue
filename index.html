@@ -4,51 +4,33 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
         <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>-->
         <title>Main board</title>
     </head>
     <body>
-        <div class="navbar" id="navbar">
-
-            <div class="appName">
-                <h3 > APPs NAME </h3>
-            </div>
-
-            <div class="options">
-                <span>
-                    {{helloText}} <h4> {{username}} </h4> <!-- LOGIN when logged out -->
-                </span>
-                <p> {{optionsText}} </p>
-                <p> {{loginText}} </p>
-            </div>
-        </div>
-        <div class="background" id="panels">
-        <div v-if="page == authPage">
-            <!-- AUTH -->
-        </div>
-
-        <div id="editNote" v-if="page == 'editPage'">
-            <!-- Title -->
-            <h1><editable :content="title" @update="title = $event" style="outline: 0px solid transparent;"></editable></h1>
-
-            <div class="panel" style="height:auto;">
-                <!-- Description -->
-                <div id="textArea">
-                    <editable :content="description" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;">{{noteText}}</editable>
-                </div>
-            </div>
+    <div id="app">
+        <navbar-top></navbar-top>
+        <div class="background">
+            <login-panel v-if="page == 'loginPage'"></login-panel>
+            <register-panel v-else-if="page == 'registerPage'"></register-panel>
             
-            <div class="panel">
-                <!-- Content -->
-                <div id="textArea">
-                    <editable :content="text" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;">{{noteText}}</editable>
-                </div>
+            <div v-else-if="page == 'myPage'">
+                
             </div>
+
+            <div v-else-if="page == 'editPage'">
+                
+            </div>
+
+            <div v-else-if="page == 'optionsPage'">
+
+            </div>
+
         </div>
-            
-        </div>
-        <script src="vue.js"></script>
-        
+    </div>
+    <script src="vue.js"></script>
     </body>
 </html>
