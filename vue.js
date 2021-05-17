@@ -1,11 +1,24 @@
 var navbar = new Vue({ 
     el: '#navbar',
     data: {
-        newFile: 'New File',
-        uploadFile: 'Upload File',
-        myFiles: 'My Files',
+        newFileText: 'New File',
+        uploadFileText: 'Upload File',
+        myFilesText: 'My Files',
+        helloText: 'Hello',
         username: 'Username',
-        options: 'Options'
+        optionsText: 'Options',
+        loginText: "Log In"
+    }
+});
+
+var panels = new Vue({
+    el: '#panels',
+    data: {
+        titleText: 'Title',
+        deleteText: 'Delete',
+        saveText: 'Save',
+        editText: 'Edit',
+        isEdited: false
     }
 });
 

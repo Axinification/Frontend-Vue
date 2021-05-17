@@ -10,20 +10,31 @@
     </head>
     <body>
         <div class="navbar" id="navbar">
-            <h3 > APPs NAME </h3>
 
-            <p> {{newFile}} </p> <!-- FILE WRITING PANEL -->
-            <p> {{uploadFile}} </p> <!-- UPLOAD DROPBOX -->
-            <p> {{myFiles}} </p> <!-- SEE AND OPEN FILES -->
+            <div class="appName">
+                <h3 > APPs NAME </h3>
+            </div>
 
-            <h4> {{username}} </h4> <!-- LOGIN when logged out -->
-            <p> {{options}} </p>
+            <div class="navMenu">
+                <p> {{newFileText}} </p> <!-- FILE WRITING PANEL -->
+                <p> {{uploadFileText}} </p> <!-- UPLOAD DROPBOX -->
+                <p> {{myFilesText}} </p> <!-- SEE AND OPEN FILES -->
+            </div>
+
+            <div class="options">
+                <span>
+                    {{helloText}} <h4> {{username}} </h4> <!-- LOGIN when logged out -->
+                </span>
+                <p> {{optionsText}} </p>
+                <p> {{loginText}} </p>
+            </div>
         </div>
-        <div class="background">
-            <h1>TITLE</h1> <!-- OPTIONAL TEXTBAR -->
+        <div class="background" id="panels">
+            <h1> {{titleText}} </h1> <!-- OPTIONAL TEXTBAR -->
             <div class="panel-nav">
-                <p>DELETE</p> <!-- DELETES FILE -->
-                <p>EDIT/SAVE</p> <!-- EDIT/SAVE FILE -->
+                <a class="deleteBtn" href="#" > {{deleteText}} </a> <!-- //TODO: Add function for Delete button  -->
+                <a class="saveBtn" href="#" v-if="isEdited"> {{saveText}} </a> <!-- //TODO: Add function for Save/Edit button  -->
+                <a class="editBtn" href="#" v-else> {{editText}} </a>
             </div>
             <div class="panel">
                 <!-- Content -->
