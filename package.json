@@ -1,0 +1,27 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Frontend build configuration file",
+  "main": "vue.js",
+  "dependencies": {
+    "vue2-dropzone": "^3.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Axinification/Frontend-Vue.git"
+  },
+  "keywords": [
+    "frontend",
+    "vue"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Axinification/Frontend-Vue/issues"
+  },
+  "homepage": "https://github.com/Axinification/Frontend-Vue#readme"
+}
