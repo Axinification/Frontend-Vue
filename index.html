@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>-->
+        <title>Main board</title>
+    </head>
+    <body>
+        <div class="navbar" id="navbar">
+            <h3 > APPs NAME </h3>
+
+            <p> {{newFile}} </p> <!-- FILE WRITING PANEL -->
+            <p> {{uploadFile}} </p> <!-- UPLOAD DROPBOX -->
+            <p> {{myFiles}} </p> <!-- SEE AND OPEN FILES -->
+
+            <h4> {{username}} </h4> <!-- LOGIN when logged out -->
+            <p> {{options}} </p>
+        </div>
+        <div class="background">
+            <h1>TITLE</h1> <!-- OPTIONAL TEXTBAR -->
+            <div class="panel-nav">
+                <p>DELETE</p> <!-- DELETES FILE -->
+                <p>EDIT/SAVE</p> <!-- EDIT/SAVE FILE -->
+            </div>
+            <div class="panel">
+                <!-- Content -->
+            </div>
+        </div>
+        <script src="vue.js"></script>
+        
+    </body>
+</html>
