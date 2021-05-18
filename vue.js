@@ -1,6 +1,3 @@
-import Vue from 'vue';
-// import vSelect from './node_modules';
-// import './node_modules/vue-select/dist/vue-select.css';
 Vue.component('navbar-top', {
     data: function () {
       return {
@@ -306,34 +303,33 @@ Vue.component('my-page', {
     }
     })
      
-Vue.component('options-page', {
-    data: function () {
-        return {
+// Vue.component('options-page', {
+//     data: function () {
+//         return {
             
-        }
-    },
-    template: `
+//         }
+//     },
+//     template: `
     
-    `, //TODO add dropzone and onclicks
-    methods: {
-        optionsOnClick () { //TODO add options logic
-            this.$root.page = 'optionsPage';
-        },
+//     `, //TODO add dropzone and onclicks
+//     methods: {
+//         optionsOnClick () { //TODO add options logic
+//             this.$root.page = 'optionsPage';
+//         },
 
-        logout () { //TODO Add logout logic
-            this.$root.authorized = false;
-            this.$root.page = 'loginPage';
-        }
-    }
-})
+//         logout () { //TODO Add logout logic
+//             this.$root.authorized = false;
+//             this.$root.page = 'loginPage';
+//         }
+//     }
+// })
 
-// Vue.component('v-select', vSelect)
 
 var app = new Vue({
     el: '#app',
     data: {
         authorized: true,
-        page: 'optionsPage',
+        page: 'myPage',
         strings: {
             username: "Username",
             password: "Password",
