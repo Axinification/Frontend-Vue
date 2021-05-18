@@ -1,3 +1,6 @@
+import Vue from 'vue';
+// import vSelect from './node_modules';
+// import './node_modules/vue-select/dist/vue-select.css';
 Vue.component('navbar-top', {
     data: function () {
       return {
@@ -7,14 +10,15 @@ Vue.component('navbar-top', {
     <div class="navbar">
 
         <div class="appName">
-            <h1> APPs NAME </h1>
+            <h1> NotesShare </h1>
         </div>
 
         <div class="options">
             <span v-if="this.$root.authorized">
                 {{this.$root.strings.helloText}} <h4> {{this.$root.user.username}} </h4> <!-- LOGIN when logged out -->
             </span>
-            <a @click="optionsOnClick"> {{this.$root.strings.optionsText}} </a>
+            <a @click="optionsOnClick" v-if="this.$root.page != 'optionsPage'"> {{this.$root.strings.optionsText}} </a>
+            <a @click="myPageOnClick" v-else > {{this.$root.strings.dashboardText}} </a>
             <a @click="logout" v-if="this.$root.authorized"> {{this.$root.strings.logoutText}} </a>
             <a @click="logout" v-if="!this.$root.authorized"> {{this.$root.strings.loginText}} </a>
         </div>
@@ -22,6 +26,10 @@ Vue.component('navbar-top', {
     methods: {
         optionsOnClick () { //TODO add options logic
             this.$root.page = 'optionsPage';
+        },
+
+        myPageOnClick () {
+            this.$root.page = 'myPage';
         },
 
         logout () { //TODO Add logout logic
@@ -86,13 +94,13 @@ Vue.component('login-panel', {
                     <section class="login--section">
                         <form class='login--form' @submit.prevent='makeAuth'>
                         <fieldset>
-                            <input v-validate="'required'" type="text" :placeholder="this.$root.strings.username" @focus='inputFocus' />
+                            <input required type="text" :placeholder="this.$root.strings.username" @focus='inputFocus' />
                             <svg viewbox='0 0 100 1' class='line'>
                             <path class='line--default' d='M0 10 L300 10'></path>
                             </svg>
                         </fieldset>
                         <fieldset>
-                            <input v-validate="'required'" type="password" :placeholder="this.$root.strings.password" @focus='inputFocus' />
+                            <input required type="password" :placeholder="this.$root.strings.password" @focus='inputFocus' />
                             <svg viewbox='0 0 100 1' class='line'>
                             <path class='line--default' d='M0 10 L300 10'></path>
                             </svg>
@@ -111,7 +119,11 @@ Vue.component('login-panel', {
   Vue.component('register-panel', {
     data: function () {
         return {
-            note: ''
+            note: '',
+            password: "",
+            confirmPassword: "",
+            passwordRules: [v => !!v || this.$root.string.passRequired],
+            confirmPasswordRules: [v => !!v || this.$root.string.passRequired],
         }
     },
     watch: {
@@ -140,16 +152,18 @@ Vue.component('login-panel', {
         // }
         makeAuth (e) {
             // write you own auth logic here
-            this.$root.authorized = false;
-            this.$root.page = 'loginPage';
-            this.note = this.$root.passDontMatch
-
+            // this.$root.authorized = false;
+            // 
+            if( this.password === this.confirmPassword) {
+                this.$root.page = 'loginPage';
+            } else {
+                this.note = this.$root.passDontMatch
+            }
         },
         inputFocus () {
             this.note = ''
         },
         register () {
-
             this.$root.page = 'registerPage';
         },
         login () { //TODO Add logout logic
@@ -164,10 +178,16 @@ Vue.component('login-panel', {
                 <div class="note note--down"><p>{{ this.note }}</p></div>
                 <div class="login">
                     <header class="login--header">
-                        <h3> {{this.$root.strings.loginPanel}} </h3>
+                        <h3> {{this.$root.strings.register}} </h3>
                     </header>
                     <section class="login--section">
                         <form class='login--form' @submit.prevent='makeAuth'>
+                        <fieldset>
+                            <input required type="email" :placeholder="this.$root.strings.email" @focus='inputFocus' />
+                            <svg viewbox='0 0 100 1' class='line'>
+                            <path class='line--default' d='M0 10 L300 10'></path>
+                            </svg>
+                        </fieldset>
                         <fieldset>
                             <input type="text" :placeholder="this.$root.strings.username" required @focus='inputFocus' />
                             <svg viewbox='0 0 100 1' class='line'>
@@ -175,23 +195,17 @@ Vue.component('login-panel', {
                             </svg>
                         </fieldset>
                         <fieldset>
-                            <input id="txtPassword" v-validate="'required'" type="password" :placeholder="this.$root.strings.password" @focus='inputFocus' />
+                            <input v-model="password" :rules="passwordRules" required type="password" name="password" :placeholder="this.$root.strings.password" @focus='inputFocus' ref="password" />
                             <svg viewbox='0 0 100 1' class='line'>
                             <path class='line--default' d='M0 10 L300 10'></path>
                             </svg>
                         </fieldset>
                         <fieldset>
-                            <input id="txtPasswordConfirm" v-validate="'required|confirmed:password'" type="password" :placeholder="this.$root.strings.confirmPassword" @focus='inputFocus' required />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <button type='submit' class='btn'>{{this.$root.strings.loginText}}</button>
+                            <button type='submit' class='btn'>{{this.$root.strings.registerText}}</button>
                         </fieldset>
                         </form>
                     </section>
-                    <span>{{this.$root.strings.alreadyHaveAcct}} <a @click="login">{{this.$root.strings.login}}</a></span>
+                    <span>{{this.$root.strings.alreadyHaveAcct}} <a @click="login">{{this.$root.strings.loginText}}</a></span>
                 </div>
             </div>  
     </div>`
@@ -243,18 +257,91 @@ Vue.component('login-panel', {
                 </div>
             </div> */}
 
+Vue.component('my-page', {
+    data: function () {
+        return {
+            deleteText: this.$root.strings.deleteText,
+            editText: this.$root.strings.editText,
+            viewText: this.$root.strings.viewText
+        }
+    },
+    template: `
+    <div class="dashboard">
+        <h1> {{this.$root.strings.dashboardText}} </h1>
+        <div class="notesList">
+            <h2>Note List</h2>
+            <div class="noteBar" v-for="note in this.$root.notes" :key="note.id">
+                <div class="bar">
+                    <div class="barText">
+                        <div class="barTitle"><span><b>{{note.title}}</b></span></div>
+                        <div class="barDescription"><span>{{note.description}}</span> </div>
+                    </div>
+                    <div class="barBtns">
+                        <a class="saveBtn" href="#" > {{viewText}} </a>
+                        <a class="editBtn" href="#" > {{editText}} </a>
+                        <a class="deleteBtn" href="#" > {{deleteText}} </a>
+                    </div>
+                </div>
+            </div>
+            <div class="addNoteBtn"><a class="btn" href="#" > {{this.$root.strings.addText }} </a></div>
+        </div>
+        <div class="filesdrop">
+            <br>
+            <h2>My Files</h2>
+            <div class="dropzone panel">
+            
+            </div>
+        </div>
+    </div>
+    `, //TODO add dropzone and onclicks
+    methods: {
+        optionsOnClick () { //TODO add options logic
+            this.$root.page = 'optionsPage';
+        },
+
+        logout () { //TODO Add logout logic
+            this.$root.authorized = false;
+            this.$root.page = 'loginPage';
+        }
+    }
+    })
+     
+Vue.component('options-page', {
+    data: function () {
+        return {
+            
+        }
+    },
+    template: `
+    
+    `, //TODO add dropzone and onclicks
+    methods: {
+        optionsOnClick () { //TODO add options logic
+            this.$root.page = 'optionsPage';
+        },
+
+        logout () { //TODO Add logout logic
+            this.$root.authorized = false;
+            this.$root.page = 'loginPage';
+        }
+    }
+})
+
+// Vue.component('v-select', vSelect)
+
 var app = new Vue({
     el: '#app',
     data: {
         authorized: true,
-        page: 'loginPage',
+        page: 'optionsPage',
         strings: {
             username: "Username",
             password: "Password",
+            email: "Email",
             confirmPassword: "Confirm password",
             loginFailed: "Login failed",
-            register: "register",
-            askIfRegistered: "I you don't have an account ",
+            register: "Register",
+            askIfRegistered: "Don't have an account? ",
             alreadyHaveAcct: "Already have account? ",
             welcome: "Welcome to our app!",
             loginPanel: "Login Panel",
@@ -262,15 +349,36 @@ var app = new Vue({
             optionsText: 'Options',
             logoutText: "Log Out",
             loginText: "Log In",
-            passDontMatch: "Passwords doesn't match"
+            registerText: "Register",
+            passDontMatch: "Passwords doesn't match",
+            passRequired: "Password is required",
+            editText: "Edit",
+            deleteText: "Delete",
+            viewText: "View",
+            addText: "Add note",
+            dashboardText: "Dashboard",
+            changeLanguage: "Change Language",
+            select: "Select"
         },
 
         user: {
             username: 'TestTest',
             
-        }
+        },
+
+        notes: [
+            {id: 0, title: "First note", description: "First notes description", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
+            {id: 1, title: "Second note", description: "Second notes description", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."},
+        ],
+
+        languages: [
+            english = "English",
+            polish = "Polish",
+            russian = "Russian",
+            german = "German"
+        ]
     },
     components: {
-
+        'v-select': v-select
     }
 })

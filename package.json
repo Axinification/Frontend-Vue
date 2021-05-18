@@ -4,6 +4,9 @@
   "description": "Frontend build configuration file",
   "main": "vue.js",
   "dependencies": {
+    "axios": "^0.21.1",
+    "vue": "^2.6.12",
+    "vue-select": "^3.11.2",
     "vue2-dropzone": "^3.6.0"
   },
   "devDependencies": {},

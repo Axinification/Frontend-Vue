@@ -5,9 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="styles.css">
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-        <!--<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>-->
         <title>Main board</title>
     </head>
     <body>
@@ -16,21 +13,24 @@
         <div class="background">
             <login-panel v-if="page == 'loginPage'"></login-panel>
             <register-panel v-else-if="page == 'registerPage'"></register-panel>
+            <my-page v-else-if="page == 'myPage'"></my-page>
+            <!-- <div v-else-if="page == 'optionsPage'"> -->
+                <div class="optionsContainer">
+                    <h1> {{this.$root.strings.optionsText}} </h1>
+                    <div class="changeLanguageContainer">
+                        <h2>{{this.$root.strings.changeLanguage}}</h2>
+                        <v-select :options="languages"></v-select>
+                        <div class="changeLanguageBtn"><a class="btn" href="#" > {{this.$root.strings.select}} </a></div>
+                    </div>
+                </div>
+            <!-- </div> -->
             
-            <div v-else-if="page == 'myPage'">
-                
-            </div>
-
             <div v-else-if="page == 'editPage'">
                 
             </div>
 
-            <div v-else-if="page == 'optionsPage'">
-
-            </div>
-
         </div>
     </div>
-    <script src="vue.js"></script>
+    <script type="module" src="vue.js"></script>
     </body>
 </html>

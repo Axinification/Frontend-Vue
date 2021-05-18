@@ -16,6 +16,7 @@ body {
 
 a, button {
     cursor:pointer;
+    text-decoration: none;
 }
 
 .navbar {
@@ -110,56 +111,6 @@ a, button {
     width: 20%;
 }
 
-.deleteBtn {
-	box-shadow:inset 0px 1px 0px 0px #f29c93;
-	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
-	background-color:#fe1a00;
-	border:1px solid #d83526;
-	color:#ffffff;
-	text-shadow:0px 1px 0px #b23e35;
-}
-.deleteBtn:hover {
-	background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
-	background-color:#ce0100;
-}
-.deleteBtn:active {
-	position:relative;
-	top:1px;
-}
-
-.saveBtn {
-	box-shadow:inset 0px 1px 0px 0px #caefab;
-	background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
-	background-color:#77d42a;
-	border:1px solid #268a16;
-	color:#306108;
-	text-shadow:0px 1px 0px #aade7c;
-}
-.saveBtn:hover {
-	background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
-	background-color:#5cb811;
-}
-.saveBtn:active {
-	position:relative;
-	top:1px;
-}
-
-.editBtn {
-	box-shadow:inset 0px 1px 0px 0px #f9eca0;
-	background:linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
-	background-color:#f0c911;
-	border:1px solid #e65f44;
-	color:#c92200;
-	text-shadow:0px 1px 0px #ded17c;
-}
-.editBtn:hover {
-	background:linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
-	background-color:#f2ab1e;
-}
-.editBtn:active {
-	position:relative;
-	top:1px;
-}
 
 #textArea {
     width:100%; 
@@ -278,11 +229,119 @@ input:focus:invalid + svg > .line--default {
     font-weight: bold;
 }
 
-.loginPage h1 {
+.loginPage h1,
+.dashboard h1,
+.options h1 {
+    font-size: 4rem;
+}
+
+.loginPage h2,
+.dashboard h2,
+.options h2 {
     font-size: 3rem;
 }
+
+
 
 .loginPage p {
     font-size: 2rem;
     font-weight: bold;
+}
+
+.noteBar {
+    margin: 1rem 0;
+    border: 1px solid;
+    padding: 1rem 0;
+    border-radius: 25px;
+}
+
+.bar {
+    width: 80vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.barText {
+    display: flex;
+    flex-direction: row;
+}
+
+.bar span,
+.bar a, .addNoteBtn {
+    font-size: 2rem;
+}
+
+.bar a, .addNoteBtn a {
+    padding: 1rem;
+}
+
+.addNoteBtn {
+    margin: 2rem;
+}
+
+.barTitle {
+    text-align: start;
+    width: 15vw;
+    margin-left: 1rem;
+}
+
+
+.deleteBtn {
+	box-shadow:inset 0px 1px 0px 0px #f29c93;
+	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+	background-color:#fe1a00;
+	border:1px solid #d83526;
+	color:#ffffff;
+	text-shadow:0px 1px 0px #b23e35;
+}
+.deleteBtn:hover {
+	background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+	background-color:#ce0100;
+}
+.deleteBtn:active {
+	position:relative;
+	top:1px;
+}
+
+.saveBtn {
+	box-shadow:inset 0px 1px 0px 0px #caefab;
+	background:linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+	background-color:#77d42a;
+	border:1px solid #268a16;
+	color:#306108;
+	text-shadow:0px 1px 0px #aade7c;
+}
+.saveBtn:hover {
+	background:linear-gradient(to bottom, #5cb811 5%, #77d42a 100%);
+	background-color:#5cb811;
+}
+.saveBtn:active {
+	position:relative;
+	top:1px;
+}
+
+.editBtn {
+	box-shadow:inset 0px 1px 0px 0px #f9eca0;
+	background:linear-gradient(to bottom, #f0c911 5%, #f2ab1e 100%);
+	background-color:#f0c911;
+	border:1px solid #e65f44;
+	color:#c92200;
+	text-shadow:0px 1px 0px #ded17c;
+}
+.editBtn:hover {
+	background:linear-gradient(to bottom, #f2ab1e 5%, #f0c911 100%);
+	background-color:#f2ab1e;
+}
+.editBtn:active {
+	position:relative;
+	top:1px;
+}
+
+.bar .deleteBtn {
+    border-radius: 0 25px 25px 0;
+}
+
+.barBtns {
+    white-space: nowrap;
 }
