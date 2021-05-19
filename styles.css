@@ -5,7 +5,7 @@ html, body, #app {
     padding: 0px; 
     margin: 0px; 
     background-color: beige; 
-    font-size: 12px; 
+    font-size: 18px; 
     font-family: 'Arial'; 
 }
 
@@ -18,6 +18,7 @@ a, button {
     cursor:pointer;
     text-decoration: none;
 }
+
 
 .navbar {
     width: 100vw;
@@ -35,7 +36,7 @@ a, button {
 }
 
 .appName *,
-.options * {
+.navbarMenu * {
     display: inline;
     vertical-align: top;
     font-size: 16px;
@@ -48,19 +49,19 @@ a, button {
 }
 
 .appName h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
 }
 
-.options {
+.navbarMenu {
     position: absolute;
     right: 4vw;
 }
 
-.options p, .options span {
+.navbarMenu p, .navbarMenu span {
     margin: 0 1vw;
 }
 
-.options span {
+.navbarMenu span {
     cursor: default;
 }
 
@@ -76,16 +77,20 @@ a, button {
 }
 
 @media (max-width: 480px) {
-
+    .container {
+        max-width: 100vw !important;
+    }
 }
 
 @media (max-width: 768px) {
-    
+    .container {
+        max-width: 70vw !important;
+    }
 }
 
 .panel {
     width: 80vw;
-    height: 500px;
+    min-height: 500px;
     background-color: white;
     border-radius: 20px;
     -moz-box-shadow:    inset 0 0 10px #888888;
@@ -129,63 +134,44 @@ fieldset {
 }
 
 .container {
-    background: none;
-    width: 360px;
-    margin: 5rem auto 0;
-    text-align: center;
-    box-shadow: 0 1rem 1rem 0 rgba(0, 0, 0, .15);
-    position: relative;
-}
-
-.note {
-    background: #FF9E80;
-    padding: .75rem 1.5rem;
-    box-sizing: border-box;
-    position: absolute;
-    bottom: 100%;
-    width: 100%;
-    z-index: 0;
-    transition: all .2s ease-out;
-}
-
-.note--down {
-    transform: translateY(100%);
-}
-
-.note--up {
-    transform: translateY(0);
-}
-
-.login {
-    z-index: 1;
-    position: relative;
     background: white;
-    padding: 1rem 1rem 2rem;
-    box-sizing: border-box;
+    margin: 3rem;
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+    text-align: center;
+    box-shadow: 0 0.6rem 0.6rem 0 rgba(0, 0, 0, .15);
+    position: relative;
+    max-width: 520px !important;
 }
 
-.login--header {
-    margin-bottom: 1rem;
+.container h3, .container .ask {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
 }
 
-.login--header h3 {
-    font-size: 2.5rem;
+h3 {
+    font-size: 1.5rem;
     font-weight: 600;
 }
 
-.btn {
+h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.myBtn {
     background: white;
     box-shadow: inset 0 0 2px 0 #EEEEEE;
     outline: none;
-    font-size: 2rem;
+    font-size: 1.5rem;
     border: 1px solid #3F51B5;
-    padding: .3rem 1rem .4rem;
+    padding: .2rem 0.6rem .3rem;
     border-radius: .25rem;
     margin: 1rem 0;
     color: #3F51B5;
 }
 
-.btn:active {
+.myBtn:active {
     box-shadow: inset 2px 2px 2px 0 #E0E0E0;
 }
 
@@ -193,35 +179,15 @@ input {
     width: 100%;
     border: none;
     text-align: center;
-    outline: none;
-    padding: .5rem 1rem;
+    padding: .3rem 0.6rem;
     box-sizing: border-box;
-    background: none;
-    font-size: 2rem;
-}
-
-.line {
-    transform: translate(0, -1rem);
-    stroke-width: 2;
-    height: 20px;
-}
-
-.line--default {
-    stroke: #ccc;
-    transition: all .2s ease-out;
-}
-
-input:focus + svg > .line--default {
-    stroke: #3F51B5;
-}
-
-input:focus:invalid + svg > .line--default {
-    stroke: #FF5722;
+    background: white;
+    font-size: 1.5rem;
 }
 
 .login span {
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
 }
 
 .login a {
@@ -229,29 +195,24 @@ input:focus:invalid + svg > .line--default {
     font-weight: bold;
 }
 
-.loginPage h1,
-.dashboard h1,
-.options h1 {
-    font-size: 4rem;
+.navbarMenu h1
+ {
+    font-size: 2rem;
 }
 
-.loginPage h2,
-.dashboard h2,
-.options h2 {
-    font-size: 3rem;
+.navbarMenu h2 {
+    font-size: 1.8rem;
 }
-
-
 
 .loginPage p {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
 .noteBar {
     margin: 1rem 0;
     border: 1px solid;
-    padding: 1rem 0;
+    padding: 0.24rem 0;
     border-radius: 25px;
 }
 
@@ -265,19 +226,20 @@ input:focus:invalid + svg > .line--default {
 .barText {
     display: flex;
     flex-direction: row;
+    white-space: nowrap;
 }
 
 .bar span,
 .bar a, .addNoteBtn {
-    font-size: 2rem;
+    font-size: 1.5rem;
 }
 
 .bar a, .addNoteBtn a {
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .addNoteBtn {
-    margin: 2rem;
+    margin: 1.5rem;
 }
 
 .barTitle {
@@ -344,4 +306,24 @@ input:focus:invalid + svg > .line--default {
 
 .barBtns {
     white-space: nowrap;
+}
+
+/* OPTIONS */
+
+.optionsPage {
+    padding: 2rem;
+}
+
+.v-select, .v-select * {
+    cursor: pointer;
+    caret-color: transparent;
+}
+
+.v-select {
+    margin: 2rem 0;
+    width: 100%;
+}
+
+.login fieldstet {
+    max-width: 100%;
 }

@@ -10,12 +10,12 @@ Vue.component('navbar-top', {
             <h1> NotesShare </h1>
         </div>
 
-        <div class="options">
+        <div class="navbarMenu">
             <span v-if="this.$root.authorized">
                 {{this.$root.strings.helloText}} <h4> {{this.$root.user.username}} </h4> <!-- LOGIN when logged out -->
             </span>
             <a @click="optionsOnClick" v-if="this.$root.page != 'optionsPage'"> {{this.$root.strings.optionsText}} </a>
-            <a @click="myPageOnClick" v-else > {{this.$root.strings.dashboardText}} </a>
+            <a @click="myPageOnClick" v-if="this.$root.authorized && this.$root.page == 'optionsPage'" > {{this.$root.strings.dashboardText}} </a>
             <a @click="logout" v-if="this.$root.authorized"> {{this.$root.strings.logoutText}} </a>
             <a @click="logout" v-if="!this.$root.authorized"> {{this.$root.strings.loginText}} </a>
         </div>
@@ -34,225 +34,141 @@ Vue.component('navbar-top', {
             this.$root.page = 'loginPage';
         }
     }
-  })
+})
 
 Vue.component('login-panel', {
     data: function () {
         return {
-            note: ''
+            email: '',
+            username: '',
+            password: '',
+            password_confirmation: '',
+            login: this.$root.strings.loginPanel
         }
     },
-    watch: {
-        note () {
-        const note = document.querySelector('.note')
-        if (this.note.length) {
-            note.classList.add('note--up')
-        } else {
-            note.classList.remove('note--up')
-            note.classList.add('note--down')
-        }
-        }
-    },
+
     methods:{
-        // login() {
-        //     if(this.input.username != "" && this.input.password != "") {
-        //         if(this.input.username == this.$parent.mockAccount.username && this.input.password == this.$parent.mockAccount.password) {
-        //             this.$emit("authenticated", true);
-        //             this.$router.replace({ name: "secure" });
-        //         } else {
-        //             console.log("The username and / or password is incorrect");
-        //         }
-        //     } else {
-        //         console.log("A username and password must be present");
-        //     }
-        // }
-        makeAuth (e) {
-            // write you own auth logic here
-            this.$root.authorized = true;
+        onSubmit: function() {
+            console.log('Form has been submitted!'); //TODO Add authorization
             this.$root.page = 'myPage';
-            this.note = this.$root.loginFailed
-        },
-        inputFocus () {
-            this.note = ''
         },
         register () {
             this.$root.page = 'registerPage';
-        }
+        },
     },
     template: `
-    <div class="loginPage">
-        <h1>{{this.$root.strings.welcome}}</h1>
-            <div class="container">
-                <div class="note note--down"><p>{{ this.note }}</p></div>
-                <div class="login">
-                    <header class="login--header">
-                        <h3> {{this.$root.strings.loginPanel}} </h3>
-                    </header>
-                    <section class="login--section">
-                        <form class='login--form' @submit.prevent='makeAuth'>
-                        <fieldset>
-                            <input required type="text" :placeholder="this.$root.strings.username" @focus='inputFocus' />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <input required type="password" :placeholder="this.$root.strings.password" @focus='inputFocus' />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <button type='submit' class='btn'>{{this.$root.strings.loginText}}</button>
-                        </fieldset>
-                        </form>
-                    </section>
-                    <span>{{this.$root.strings.askIfRegistered}} <a @click="register">{{this.$root.strings.register}}</a></span>
-                </div>
-            </div>  
-    </div>`
+    <div class="container">
+        <validation-observer v-slot="{ invalid, handleSubmit }">
+            <h3> {{login}} </h3>
+            <form @submit.prevent="handleSubmit(onSubmit)">
+            <div class="form-group">
+                <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" v-model="username" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <validation-provider rules="required|min:6|onenumber" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" placeholder="Enter a password" class="form-control" v-model="password" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <button type="submit" class="btn btn-block btn-lg btn-primary" v-bind:disabled="invalid">Login</button>
+            </div>
+
+            </form>
+        </validation-observer>
+        <span class="ask">{{this.$root.strings.askIfRegistered}} <a @click="register">{{this.$root.strings.register}}</a></span>
+    </div>
+    `
   }) //TODO add function to a for registering
 
-  Vue.component('register-panel', {
+Vue.component('register-panel', {
     data: function () {
         return {
-            note: '',
-            password: "",
-            confirmPassword: "",
-            passwordRules: [v => !!v || this.$root.string.passRequired],
-            confirmPasswordRules: [v => !!v || this.$root.string.passRequired],
+            email: '',
+            username: '',
+            password: '',
+            password_confirmation: '',
+            register: this.$root.strings.registerPanel
         }
     },
-    watch: {
-        note () {
-        const note = document.querySelector('.note')
-        if (this.note.length) {
-            note.classList.add('note--up')
-        } else {
-            note.classList.remove('note--up')
-            note.classList.add('note--down')
-        }
-        }
-    },
+
     methods:{
-        // register() {
-        //     if(this.input.username != "" && this.input.password != "") {
-        //         if(this.input.username == this.$parent.mockAccount.username && this.input.password == this.$parent.mockAccount.password) {
-        //             this.$emit("authenticated", true);
-        //             this.$router.replace({ name: "secure" });
-        //         } else {
-        //             console.log("The username and / or password is incorrect");
-        //         }
-        //     } else {
-        //         console.log("A username and password must be present");
-        //     }
-        // }
-        makeAuth (e) {
-            // write you own auth logic here
-            // this.$root.authorized = false;
-            // 
-            if( this.password === this.confirmPassword) {
-                this.$root.page = 'loginPage';
-            } else {
-                this.note = this.$root.passDontMatch
-            }
+        onSubmit: function() {
+            console.log('Form has been submitted!');
         },
-        inputFocus () {
-            this.note = ''
-        },
-        register () {
-            this.$root.page = 'registerPage';
-        },
+
         login () { //TODO Add logout logic
             this.$root.authorized = false;
             this.$root.page = 'loginPage';
         }
     },
     template: `
-    <div class="loginPage">
-        <h1>{{this.$root.strings.welcome}}</h1>
-            <div class="container">
-                <div class="note note--down"><p>{{ this.note }}</p></div>
-                <div class="login">
-                    <header class="login--header">
-                        <h3> {{this.$root.strings.register}} </h3>
-                    </header>
-                    <section class="login--section">
-                        <form class='login--form' @submit.prevent='makeAuth'>
-                        <fieldset>
-                            <input required type="email" :placeholder="this.$root.strings.email" @focus='inputFocus' />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <input type="text" :placeholder="this.$root.strings.username" required @focus='inputFocus' />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <input v-model="password" :rules="passwordRules" required type="password" name="password" :placeholder="this.$root.strings.password" @focus='inputFocus' ref="password" />
-                            <svg viewbox='0 0 100 1' class='line'>
-                            <path class='line--default' d='M0 10 L300 10'></path>
-                            </svg>
-                        </fieldset>
-                        <fieldset>
-                            <button type='submit' class='btn'>{{this.$root.strings.registerText}}</button>
-                        </fieldset>
-                        </form>
-                    </section>
-                    <span>{{this.$root.strings.alreadyHaveAcct}} <a @click="login">{{this.$root.strings.loginText}}</a></span>
-                </div>
-            </div>  
-    </div>`
+    <div class="container">
+        <validation-observer v-slot="{ invalid, handleSubmit }">
+            <h3> {{register}} </h3>
+            <form @submit.prevent="handleSubmit(onSubmit)">
+                <div class="form-group">
+                <validation-provider rules="required|email" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="email">Your Email</label>
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" placeholder="email@example.com" class="form-control" v-model="email" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" placeholder="Enter your username" class="form-control" v-model="username" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <validation-provider rules="required|min:6|onenumber" vid="password" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="password">Password</label>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" placeholder="Enter a password" class="form-control" v-model="password" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <validation-provider rules="required|confirmed:password" v-slot="{ dirty, valid, invalid, errors }">
+                    <label for="confirmation">Confirm Password</label>
+                    <div class="input-group">
+                        <input type="password" id="confirmation" name="confirmation" placeholder="Re-type password" class="form-control" v-model="password_confirmation" />
+                    </div>
+                    <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
+                </validation-provider>
+            </div>
+        
+            <div class="form-group">
+                <button type="submit" class="btn btn-block btn-lg btn-primary" v-bind:disabled="invalid">Register</button>
+            </div>
+
+            </form>
+        </validation-observer>
+        <span class="ask">{{this.$root.strings.alreadyHaveAcct}} <a @click="login">{{this.$root.strings.loginText}}</a></span>
+    </div>
+    `
   }) //TODO add function to a for registering
-// var editNote = new Vue({
-//     el: '#editNote',
-//     data(){
-//         return {
-//             note : {
-//                 title: 'Notes Title',
-//                 description: 'Notes Description',
-//                 content: 'Notes content'
-//             },
-//             editField: ''
-//         }
-//     },
-//     methods: {
-//         focusField(field){
-//           this.editField = field;
-//         },
-//         blurField(){
-//           this.editField = '';
-//         },
-//         showField(field){
-//           return (this.user[field] == '' || this.editField == field)
-//         }
-//       }
-// })
 
-// Vue.component('editable',{
-//     template:'<div contenteditable="true" @input="update"></div>',
-//     props:['content'],
-//     mounted:function(){
-//       this.$el.innerText = this.content;
-//     },
-//     methods:{
-//       update:function(event){
-//         this.$emit('update',event.target.innerText);
-//       }
-//     }
-//   })
-
-{/* <h1> {{noteTitle}} </h1> <!-- NOTE TITLE -->
-            <editable :content="text" @update="text = $event" style="outline: 0px solid transparent;"></editable>
-            <div class="panel">
-                <!-- Content -->
-                <div id="textArea">
-                    <editable :content="text" @update="text = $event" style="width:95%; height:95%; margin: auto; outline: 0px solid transparent;"></editable>
-                </div>
-            </div> */}
 
 Vue.component('my-page', {
     data: function () {
@@ -264,9 +180,9 @@ Vue.component('my-page', {
     },
     template: `
     <div class="dashboard">
-        <h1> {{this.$root.strings.dashboardText}} </h1>
+        <h3> {{this.$root.strings.dashboardText}} </h3>
         <div class="notesList">
-            <h2>Note List</h2>
+            <h4>Note List</h4>
             <div class="noteBar" v-for="note in this.$root.notes" :key="note.id">
                 <div class="bar">
                     <div class="barText">
@@ -280,11 +196,11 @@ Vue.component('my-page', {
                     </div>
                 </div>
             </div>
-            <div class="addNoteBtn"><a class="btn" href="#" > {{this.$root.strings.addText }} </a></div>
+            <div class="addNoteBtn"><a class="myBtn" href="#" > {{this.$root.strings.addText }} </a></div>
         </div>
         <div class="filesdrop">
             <br>
-            <h2>My Files</h2>
+            <h3>My Files</h3>
             <div class="dropzone panel">
             
             </div>
@@ -302,34 +218,64 @@ Vue.component('my-page', {
         }
     }
     })
-     
-// Vue.component('options-page', {
-//     data: function () {
-//         return {
-            
-//         }
-//     },
-//     template: `
     
-//     `, //TODO add dropzone and onclicks
-//     methods: {
-//         optionsOnClick () { //TODO add options logic
-//             this.$root.page = 'optionsPage';
-//         },
+Vue.component('options-page', {
+    data: function () {
+        return {
+            
+        }
+    },
+    template: `
+    <div class="optionsPage container">
+        <h3> {{this.$root.strings.optionsText}} </h3>
+        <div class="changeLanguageContainer">
+            <h4>{{this.$root.strings.changeLanguage}}</h4>
+            <v-select :options="this.$root.languages"></v-select>  
+            <div class="changeLanguageBtn"><a class="myBtn" href="#" > {{this.$root.strings.select}} </a></div>
+        </div>
+    <div class="changePasswordContainer">
 
-//         logout () { //TODO Add logout logic
-//             this.$root.authorized = false;
-//             this.$root.page = 'loginPage';
-//         }
-//     }
-// })
+    </div>
+    <div class="deleteAccountContainer">
 
+    </div>
+</div>
+    `, //TODO add dropzone and onclicks
+    methods: {
+        optionsOnClick () { //TODO add options logic
+            this.$root.page = 'optionsPage';
+        },
+
+        logout () { //TODO Add logout logic
+            this.$root.authorized = false;
+            this.$root.page = 'loginPage';
+        }
+    }
+})
+
+Object.keys(VeeValidateRules).forEach(rule => {
+    VeeValidate.extend(rule, VeeValidateRules[rule]);
+});
+
+VeeValidate.extend('onenumber', {
+    name: 'At least one number',
+    validate: value => { 
+        return value.match(/[0-9]/g) !== null
+    },
+    message: '{_field_} must contain at least one number.',
+});
+
+Vue.component('validation-observer', VeeValidate.ValidationObserver);
+
+Vue.component('validation-provider', VeeValidate.ValidationProvider);
+
+Vue.component('v-select', VueSelect.VueSelect)
 
 var app = new Vue({
     el: '#app',
     data: {
         authorized: true,
-        page: 'myPage',
+        page: 'registerPage',
         strings: {
             username: "Username",
             password: "Password",
@@ -341,11 +287,11 @@ var app = new Vue({
             alreadyHaveAcct: "Already have account? ",
             welcome: "Welcome to our app!",
             loginPanel: "Login Panel",
+            registerPanel: "Registration",
             helloText: 'Hello',
             optionsText: 'Options',
             logoutText: "Log Out",
             loginText: "Log In",
-            registerText: "Register",
             passDontMatch: "Passwords doesn't match",
             passRequired: "Password is required",
             editText: "Edit",
@@ -356,6 +302,11 @@ var app = new Vue({
             changeLanguage: "Change Language",
             select: "Select"
         },
+
+        email: '',
+        name: '',
+        phone: '',
+        url: '',
 
         user: {
             username: 'TestTest',
@@ -374,7 +325,22 @@ var app = new Vue({
             german = "German"
         ]
     },
-    components: {
-        'v-select': v-select
+    methods: {
+        
+        inputFocus () {
+            this.note = ''
+        },
+
+        validateBeforeSubmit() {
+            this.$validator.validateAll().then((result) => {
+              if (result) {
+                // eslint-disable-next-line
+                alert('Form Submitted!');
+                return;
+              }
+      
+              alert('Correct them errors!');
+            });
+          }
     }
 })
