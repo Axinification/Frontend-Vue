@@ -1,3 +1,15 @@
+const instance = axios.create({
+    timeout: 3000,
+    headers: {
+        "Access-Control-Allow-Origin" : "*",
+        "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token, x-ms-*,content-*",
+        "content-type": "application/json",
+    }
+});
+
+const API_URL = "https://notesshareapi.azurewebsites.net/api"
+
 Vue.component('navbar-top', {
     data: function () {
       return {
@@ -99,13 +111,33 @@ Vue.component('register-panel', {
             username: '',
             password: '',
             password_confirmation: '',
-            register: this.$root.strings.registerPanel
+            register: this.$root.strings.registerPanel,
+            info: ''
         }
     },
 
     methods:{
+        
         onSubmit: function() {
-            console.log('Form has been submitted!');
+            let newUser = {
+                email: this.email,
+                Username: this.username,
+                password: this.password,
+                confirmpassword: this.confirmPassword,
+                description: ''
+              }
+            //https://notesshareapi.azurewebsites.net/api/account/register
+            instance
+            .post(API_URL+'/account/register', newUser)
+            .then(response => {
+                console.log('Form has been submitted!')
+                this.info = response
+            })
+            .catch(error => {
+                console.log(error)
+                this.errored = true
+            })
+            // .finally(() => console.log('Form has been submitted!'))
         },
 
         login () { //TODO Add logout logic
