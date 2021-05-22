@@ -1,4 +1,4 @@
-const postInstance = axios.create({
+const registerInstance = axios.create({
     timeout: 10000,
     headers: {
         "Access-Control-Allow-Methods": "POST",
@@ -7,10 +7,10 @@ const postInstance = axios.create({
     }
 });
 
-const getInstance = axios.create({
+const loginInstance = axios.create({
     timeout: 10000,
     headers: {
-        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token, x-ms-*,content-*",
         "content-type": "application/x-www-form-urlencoded;charset=UTF-8"
     }
@@ -69,17 +69,26 @@ Vue.component('login-panel', {
 
     methods:{
         onSubmit: function() {
-            let loginRequest = {
-                username: this.username,
-                password: this.password,
-                grant_type: "password"
-            }
-            getInstance.get(API_URL+'/token', loginRequest)
+
+            const params = new URLSearchParams();
+            params.append('username', this.username)
+            params.append('password', this.password)
+            params.append('grant_type', 'password')
+            // let loginRequest = {
+            //     username: this.username,
+            //     password: this.password,
+            //     grant_type: "password"
+            // }
+
+            loginInstance.post(API_URL+'/token', params)
             .then(response => {
                 console.log(response);
-                console.log(loginRequest);
+                console.log(params);
+                this.$root.user.username = response.data.userName;
+                this.$root.page = "myPage";
             })
             .catch(error => {
+                console.log(error);
                 this.info = error.message;
             })
         },
@@ -144,7 +153,7 @@ Vue.component('register-panel', {
                 password: this.password,
                 confirmpassword: this.confirmation
             }
-            postInstance.post(API_URL+'/api/account/register', newUser)
+            registerInstance.post(API_URL+'/api/account/register', newUser)
             .then(response => {
                 console.log(newUser);
                 this.info = 'Form has been submitted!';
@@ -325,7 +334,7 @@ var app = new Vue({
     el: '#app',
     data: {
         authorized: true,
-        page: 'registerPage',
+        page: 'loginPage',
         strings: {
             username: "Username",
             password: "Password",
