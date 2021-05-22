@@ -333,7 +333,7 @@ Vue.component('v-select', VueSelect.VueSelect)
 var app = new Vue({
     el: '#app',
     data: {
-        authorized: true,
+        authorized: false,
         page: 'loginPage',
         strings: {
             username: "Username",
@@ -368,7 +368,7 @@ var app = new Vue({
         url: '',
 
         user: {
-            username: 'TestTest',
+            username: '',
             
         },
 
