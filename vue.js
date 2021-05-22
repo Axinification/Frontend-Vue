@@ -1,14 +1,22 @@
-const instance = axios.create({
-    timeout: 3000,
+const postInstance = axios.create({
+    timeout: 10000,
     headers: {
-        "Access-Control-Allow-Origin" : "*",
-        "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Methods": "POST",
         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token, x-ms-*,content-*",
-        "content-type": "application/json",
+        "content-type": "application/json"
     }
 });
 
-const API_URL = "https://notesshareapi.azurewebsites.net/api"
+const getInstance = axios.create({
+    timeout: 10000,
+    headers: {
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token, x-ms-*,content-*",
+        "content-type": "application/x-www-form-urlencoded;charset=UTF-8"
+    }
+})
+
+const API_URL = "https://notesshareapi.azurewebsites.net"
 
 Vue.component('navbar-top', {
     data: function () {
@@ -51,18 +59,29 @@ Vue.component('navbar-top', {
 Vue.component('login-panel', {
     data: function () {
         return {
-            email: '',
-            username: '',
-            password: '',
-            password_confirmation: '',
-            login: this.$root.strings.loginPanel
+            username: "",
+            password: "",
+            loginPanel: this.$root.strings.loginPanel,
+            loginText: this.$root.strings.loginText,
+            info: ""
         }
     },
 
     methods:{
         onSubmit: function() {
-            console.log('Form has been submitted!'); //TODO Add authorization
-            this.$root.page = 'myPage';
+            let loginRequest = {
+                username: this.username,
+                password: this.password,
+                grant_type: "password"
+            }
+            getInstance.get(API_URL+'/token', loginRequest)
+            .then(response => {
+                console.log(response);
+                console.log(loginRequest);
+            })
+            .catch(error => {
+                this.info = error.message;
+            })
         },
         register () {
             this.$root.page = 'registerPage';
@@ -71,8 +90,9 @@ Vue.component('login-panel', {
     template: `
     <div class="container">
         <validation-observer v-slot="{ invalid, handleSubmit }">
-            <h3> {{login}} </h3>
-            <form @submit.prevent="handleSubmit(onSubmit)">
+            <h3> {{loginPanel}} </h3>
+            <h4 id="loginInfo" v-text="info"> </h4>
+            <form id="login-form" @submit.prevent="handleSubmit(onSubmit)">
             <div class="form-group">
                 <validation-provider rules="required" v-slot="{ dirty, valid, invalid, errors }">
                     <label for="username">Username</label>
@@ -107,37 +127,35 @@ Vue.component('login-panel', {
 Vue.component('register-panel', {
     data: function () {
         return {
-            email: '',
-            username: '',
-            password: '',
-            password_confirmation: '',
-            register: this.$root.strings.registerPanel,
-            info: ''
+            email: "",
+            username: "",
+            password: "",
+            confirmation: "",
+            register: this.$root.strings.register,
+            registerPanel: this.$root.strings.registerPanel,
+            info: ""
         }
     },
-
     methods:{
-        
         onSubmit: function() {
             let newUser = {
-                email: this.email,
                 Username: this.username,
+                email: this.email,
                 password: this.password,
-                confirmpassword: this.confirmPassword,
-                description: ''
-              }
-            //https://notesshareapi.azurewebsites.net/api/account/register
-            instance
-            .post(API_URL+'/account/register', newUser)
+                confirmpassword: this.confirmation
+            }
+            postInstance.post(API_URL+'/api/account/register', newUser)
             .then(response => {
-                console.log('Form has been submitted!')
-                this.info = response
+                console.log(newUser);
+                this.info = 'Form has been submitted!';
+                var form = document.getElementById('register-form');
+                form.reset();  // Reset all form data
             })
             .catch(error => {
-                console.log(error)
+                this.info = error.message;
                 this.errored = true
             })
-            // .finally(() => console.log('Form has been submitted!'))
+
         },
 
         login () { //TODO Add logout logic
@@ -148,8 +166,9 @@ Vue.component('register-panel', {
     template: `
     <div class="container">
         <validation-observer v-slot="{ invalid, handleSubmit }">
-            <h3> {{register}} </h3>
-            <form @submit.prevent="handleSubmit(onSubmit)">
+            <h3> {{registerPanel}} </h3>
+            <h4 id="registerInfo" v-text="info"> </h4>
+            <form id="register-form" @submit.prevent="handleSubmit(onSubmit)">
                 <div class="form-group">
                 <validation-provider rules="required|email" v-slot="{ dirty, valid, invalid, errors }">
                     <label for="email">Your Email</label>
@@ -184,14 +203,14 @@ Vue.component('register-panel', {
                 <validation-provider rules="required|confirmed:password" v-slot="{ dirty, valid, invalid, errors }">
                     <label for="confirmation">Confirm Password</label>
                     <div class="input-group">
-                        <input type="password" id="confirmation" name="confirmation" placeholder="Re-type password" class="form-control" v-model="password_confirmation" />
+                        <input type="password" id="confirmation" name="confirmation" placeholder="Re-type password" class="form-control" v-model="confirmation" />
                     </div>
                     <div class="invalid-feedback d-inline-block" v-show="errors">{{ errors[0] }}</div>
                 </validation-provider>
             </div>
         
             <div class="form-group">
-                <button type="submit" class="btn btn-block btn-lg btn-primary" v-bind:disabled="invalid">Register</button>
+                <button type="submit" class="btn btn-block btn-lg btn-primary" v-bind:disabled="invalid">{{register}}</button>
             </div>
 
             </form>
@@ -200,7 +219,6 @@ Vue.component('register-panel', {
     </div>
     `
   }) //TODO add function to a for registering
-
 
 Vue.component('my-page', {
     data: function () {
