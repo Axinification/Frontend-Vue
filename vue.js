@@ -37,7 +37,7 @@ Vue.component('navbar-top', {
             <a @click="optionsOnClick" v-if="this.$root.page != 'optionsPage'"> {{this.$root.strings.optionsText}} </a>
             <a @click="myPageOnClick" v-if="this.$root.authorized && this.$root.page == 'optionsPage'" > {{this.$root.strings.dashboardText}} </a>
             <a @click="logout" v-if="this.$root.authorized"> {{this.$root.strings.logoutText}} </a>
-            <a @click="logout" v-if="!this.$root.authorized"> {{this.$root.strings.loginText}} </a>
+            <a @click="login" v-else-if="!this.$root.authorized"> {{this.$root.strings.loginText}} </a>
         </div>
     </div>`,
     methods: {
@@ -51,6 +51,10 @@ Vue.component('navbar-top', {
 
         logout () { //TODO Add logout logic
             this.$root.authorized = false;
+            this.$root.page = 'loginPage';
+        },
+
+        login () {
             this.$root.page = 'loginPage';
         }
     }
@@ -82,9 +86,13 @@ Vue.component('login-panel', {
 
             loginInstance.post(API_URL+'/token', params)
             .then(response => {
-                console.log(response);
-                console.log(params);
+                // console.log(response);
+                // console.log(params);
                 this.$root.user.username = response.data.userName;
+                console.log(this.$root.authorized);
+                this.$root.authorized = true;
+                console.log(this.$root.authorized);
+
                 this.$root.page = "myPage";
             })
             .catch(error => {
@@ -168,7 +176,6 @@ Vue.component('register-panel', {
         },
 
         login () { //TODO Add logout logic
-            this.$root.authorized = false;
             this.$root.page = 'loginPage';
         }
     },
@@ -267,14 +274,6 @@ Vue.component('my-page', {
     </div>
     `, //TODO add dropzone and onclicks
     methods: {
-        optionsOnClick () { //TODO add options logic
-            this.$root.page = 'optionsPage';
-        },
-
-        logout () { //TODO Add logout logic
-            this.$root.authorized = false;
-            this.$root.page = 'loginPage';
-        }
     }
     })
     
@@ -369,7 +368,6 @@ var app = new Vue({
 
         user: {
             username: '',
-            
         },
 
         notes: [
